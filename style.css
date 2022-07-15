@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('assets/fonts/Lato/Lato-Regular.ttf')  format('truetype'); /* Safari, Android, iOS */
+}
+
+body {
+    font-family: Lato;
+}
+
+h1 {
+    color: #D04F4F;
+}
+
+button img {
+    height: 40px;
+    width: 40px;
+}
+
+header img {
+    height: 50px;
+    width: 50px;
+}
+
+button {
+    box-shadow: none;
+}
+
+#btn-appareils {
+    background-color: #68D9A4;
+}
+
+#btn-ustensiles {
+    background-color: #ED6454;
+}
+
+/* CARDS */
+.card-img-top {
+    height: 200px;
+    width: 100%;
+    background-color: #C7BEBE;
+}
+
+.card-body {
+    background-color: #E7E7E7;
+}
+
+.entete {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.entete img {
+    height: 25px;
+    width: 25px;
+}
+
+.entete-time {
+    display: flex;
+    flex-direction: row;
+}
+
+.recette {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    height: 100%;
+}
+
+.recette p {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    white-space: normal;
+}
