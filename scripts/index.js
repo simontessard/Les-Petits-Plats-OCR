@@ -1,15 +1,5 @@
 import { recipeFactory } from "./factories/recipe.js";
-
-async function getRecipes() {
-    return fetch('scripts/data/recipes.json')
-        .then(response => {
-            return response.json()
-        })
-        .then(data => {
-          console.log(data)
-            return ({ recipes: [...data.recipes] })
-        })
-}
+import { recipes } from "./data/recipes.js";
 
 async function displayData (recipes) {
     const recipesSection = document.querySelector('#recipes-cards')
@@ -29,9 +19,7 @@ async function displayData (recipes) {
   };
 
 async function init () {
-    // Récupère les datas des photographes
-    const { recipes } = await getRecipes() || {}
-
+    // Initialise les données recettes
     if (typeof recipes !== 'undefined') {
       displayData(recipes)
     }
