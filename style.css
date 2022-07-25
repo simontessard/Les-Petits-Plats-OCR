@@ -75,3 +75,19 @@ button {
     -webkit-line-clamp: 7;
     white-space: normal;
 }
+
+#ingredientsDropdownMenu {
+    background-color: #3282F7;
+    color: white;
+}
+#ingredientsDropdownMenu a:hover{
+    background-color: #0c68f1;
+}
+/* rows */
+div.dropdown-multicol{
+    width: 50em;
+  }
+  div.dropdown-row>a.dropdown-item{
+    display:inline-block;
+    width: 32%;
+}

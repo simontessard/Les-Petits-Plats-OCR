@@ -1,5 +1,35 @@
 import { recipeFactory } from "./factories/recipe.js";
 import { recipes } from "./data/recipes.js";
+import { displayDropdownOptions } from "./research_tag.js"
+import { filterButtonFactory, createFilterButton } from "./factories/filterButton.js";
+
+function getIngredients(recipes) {
+  let ingredientsData =  recipes.map(s=>s.ingredients);
+  let allIngredients = []
+
+  ingredientsData.forEach(ingredientsRecipe => 
+    ingredientsRecipe.forEach(ingredient => 
+      allIngredients.push(ingredient.ingredient))
+  );
+  
+  // Removes duplicates from the list
+  const filteredIngredients = allIngredients.filter(function(ele , pos){
+    return allIngredients.indexOf(ele) == pos;
+  })
+
+  return filteredIngredients
+}
+
+function getAppareils(recipes) {
+  let appareilsData =  recipes.map(s=>s.appliance);
+  
+  // Removes duplicates from the list
+  appareilsData = appareilsData.filter(function(ele , pos){
+    return appareilsData.indexOf(ele) == pos;
+  })
+
+  return appareilsData
+}
 
 async function displayData (recipes) {
     const recipesSection = document.querySelector('#recipes-cards')
@@ -19,10 +49,12 @@ async function displayData (recipes) {
   };
 
 async function init () {
-    // Initialise les données recettes
-    if (typeof recipes !== 'undefined') {
-      displayData(recipes)
-    }
-  };
+  // Initialise les données recettes
+  displayData(recipes)
+  createFilterButton()
+  displayDropdownOptions(recipes)
+};
   
 init()
+
+export { getAppareils, getIngredients }
