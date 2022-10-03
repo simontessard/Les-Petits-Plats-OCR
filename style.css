@@ -20,18 +20,81 @@ header img {
     height: 50px;
     width: 50px;
 }
+/* BUTTON */
 
 button {
     box-shadow: none;
 }
 
+#btn-ingredients {
+    background-color: #3282f7;
+}
 #btn-appareils {
     background-color: #68D9A4;
 }
-
 #btn-ustensiles {
     background-color: #ED6454;
 }
+
+.filter-button {
+    display: flex;
+    padding: 25px 65px 25px 25px;
+    margin-right: 25px;
+    border-radius: 5px;
+    border: 0;
+    color: white;
+    font-weight: 600;
+    font-size: large;
+    overflow: visible;
+    z-index: 4;
+    position: relative;
+    text-align: start;
+    width: 190px;
+    justify-content: space-between;
+}
+.filter-button::after {
+    content: '';
+    position: relative;
+    z-index: 3;
+    top: 10px;
+    margin-left: 30px;
+    transition: 0.5s;
+    pointer-events: none;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+.filter-button.active::after {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+.filter-button.active {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.dropdown-option {
+    display: inline-block;
+    position: absolute;
+    top: 76px;
+    left: 0;
+    z-index: 4;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding-block: 20px;
+}
+
+div.dropdown-multicol{
+    width: 50em;
+}
+div.dropdown-row>a.dropdown-item{
+    display:inline-block;
+    width: 32%;
+}
+
+button:focus {outline:0;}
 
 /* CARDS */
 .card-img-top {
@@ -83,11 +146,17 @@ button {
 #ingredientsDropdownMenu a:hover{
     background-color: #0c68f1;
 }
-/* rows */
-div.dropdown-multicol{
-    width: 50em;
-  }
-  div.dropdown-row>a.dropdown-item{
-    display:inline-block;
-    width: 32%;
+#appareilsDropdownMenu {
+    background-color: #68D9A4;
+    color: white;
+}
+#appareilsDropdownMenu a:hover{
+    background-color: #5ec494;
+}
+#ustensilesDropdownMenu {
+    background-color: #ED6454;
+    color: white;
+}
+#ustensilesDropdownMenu a:hover{
+    background-color: #cf574a;
 }

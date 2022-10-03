@@ -31,6 +31,22 @@ function getAppareils(recipes) {
   return appareilsData
 }
 
+function getUstensils(recipes) {
+  let ustensilsData =  recipes.map(s=>s.ustensils);
+  let allUstensils = []
+
+  ustensilsData.forEach(ustensils => 
+    ustensils.forEach(ustensil =>
+      allUstensils.push(ustensil))
+  );
+
+  const filteredUstensils = allUstensils.filter(function(ele , pos){
+    return allUstensils.indexOf(ele) == pos;
+  })
+  
+  return filteredUstensils;
+}
+
 async function displayData (recipes) {
     const recipesSection = document.querySelector('#recipes-cards')
     recipesSection.setAttribute('class','card-deck mt-4 px-5')
@@ -57,4 +73,4 @@ async function init () {
   
 init()
 
-export { getAppareils, getIngredients }
+export { getAppareils, getIngredients, getUstensils }

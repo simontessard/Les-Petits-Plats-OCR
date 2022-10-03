@@ -1,23 +1,33 @@
-import { getAppareils, getIngredients } from "./index.js";
+import { getAppareils, getIngredients, getUstensils } from "./index.js";
 
 function displayDropdownOptions(items) {
-    const allFilterButtons = document.querySelectorAll('.btn-secondary')
+    const allFilterButtons = document.querySelectorAll('.filter-button')
 
     allFilterButtons.forEach(button => {
-
         button.addEventListener('click', function () {
+            button.classList.toggle('active')
+
+            allFilterButtons.forEach(button => {
+                button.style.width = "190px";
+            })
 
             const DropdownOptions = document.createElement('div')
-            DropdownOptions.setAttribute('class', 'dropdown-menu dropdown-multicol')
+            DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
 
             const DropdownOptionsExists = document.getElementById(button.name + 'DropdownMenu')
+            const DropdownOptionsActive = document.getElementsByClassName('dropdown-option')
+
+            if (DropdownOptionsActive != null) {
+                for (let item of DropdownOptionsActive) { item.remove(); }
+            }
 
             if (DropdownOptionsExists != null) {
-                DropdownOptionsExists.childNodes.forEach(child => {
-                    DropdownOptionsExists.removeChild(child)
-                })
+                DropdownOptionsExists.remove()
+                button.style.width = "190px";
             } else {
-                button.after(DropdownOptions)
+                button.appendChild(DropdownOptions)
+                button.style.width = "900px";
+                console.log(DropdownOptions.clientWidth)
             }
 
             let rowDropdown = document.createElement('div')
@@ -28,7 +38,6 @@ function displayDropdownOptions(items) {
             DropdownOptions.setAttribute('aria-labelledby', 'btn-' + button.name)
 
             let newItems;
-            console.log(newItems)
 
             if (button.name === 'ingredients') {
                 newItems = getIngredients(items)
@@ -36,10 +45,11 @@ function displayDropdownOptions(items) {
             if (button.name === 'appareils') {
                 newItems = getAppareils(items)
             }
+            if (button.name === 'ustensiles') {
+                newItems = getUstensils(items)
+            }
 
-            let arrayOf3 = spliceIntoChunks(newItems, 3)
-            console.log(arrayOf3)
-
+            let arrayOf3 = splitArray(newItems, 3)
             let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 
 
             for (let rowNumber = 0; rowNumber < min; rowNumber++) {
@@ -55,11 +65,11 @@ function displayDropdownOptions(items) {
     });
 }
 
-function spliceIntoChunks(array, chunkSize) {
+function splitArray(array, splitSize) {
     const result = [];
     while (array.length > 0) {
-        const chunk = array.splice(0, chunkSize);
-        result.push(chunk);
+        const newArray = array.splice(0, splitSize);
+        result.push(newArray);
     }
     return result;
 }
