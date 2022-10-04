@@ -96,6 +96,37 @@ div.dropdown-row>a.dropdown-item{
 
 button:focus {outline:0;}
 
+.active-filters {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 20px;
+}  
+
+.filter-element {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    margin-top: 1.5em;
+}
+
+.filter-tag {
+    border: 0;
+    font-weight: 500;
+    font-size: medium;
+    margin: 0;
+}
+
+.filter-cross {
+    height: 25px;
+    width: 25px;
+    margin-left: 15px;
+    filter: invert(100%);
+}
+
 /* CARDS */
 .card-img-top {
     height: 200px;
