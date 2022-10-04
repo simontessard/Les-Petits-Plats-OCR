@@ -8,9 +8,7 @@ function displayDropdownOptions(items) {
         button.addEventListener('click', function () {
             button.classList.toggle('active')
 
-            allFilterButtons.forEach(button => {
-                button.style.width = "190px"
-            })
+            allFilterButtons.forEach(button => { button.style.width = "190px" })
 
             const DropdownOptions = document.createElement('div')
             DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
@@ -40,20 +38,19 @@ function displayDropdownOptions(items) {
             let newItems
             let elementBackgroundColor
 
-            if (button.name === 'ingredients') {
-                newItems = getIngredients(items)
-                elementBackgroundColor = '#3282f7'
-            }
-            if (button.name === 'appareils') {
-                newItems = getAppareils(items)
-                elementBackgroundColor = '#68D9A4'
-            }
-            if (button.name === 'ustensiles') {
-                newItems = getUstensils(items)
-                elementBackgroundColor = '#ED6454'
-            }
-
-            console.log(button.style.backgroundColor)
+            switch (button.name) {
+                case 'ingredients':
+                    newItems = getIngredients(items)
+                    elementBackgroundColor = '#3282f7'
+                    break
+                case 'appareils':
+                    newItems = getAppareils(items)
+                    elementBackgroundColor = '#68D9A4'
+                    break
+                case 'ustensiles':
+                    newItems = getUstensils(items)
+                    elementBackgroundColor = '#ED6454'
+                    break }
 
             let arrayOf3 = splitArray(newItems, 3)
             let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 
