@@ -5,16 +5,28 @@ function displayDropdownOptions(items) {
     const filtersSection = document.querySelector('.active-filters')
 
     allFilterButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            button.classList.toggle('active')
+        button.addEventListener('click', function listingTag() {
 
-            allFilterButtons.forEach(button => { button.style.width = "190px" })
+            allFilterButtons.forEach(oneButton => {
+                if (oneButton.name != button.name) {
+                    oneButton.style.width = "190px"
+                    oneButton.classList.remove('active')
+                }
+            })
+
+            if (button.classList.value == 'filter-button active') {
+                button.classList.remove('active')
+            } else {
+                button.classList.add('active')
+            }
 
             const DropdownOptions = document.createElement('div')
             DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
 
             const DropdownOptionsExists = document.getElementById(button.name + 'DropdownMenu')
             const DropdownOptionsActive = document.getElementsByClassName('dropdown-option')
+
+            let searchInputTag = document.getElementById('searchInput' + button.name)
 
             if (DropdownOptionsActive != null) {
                 for (let item of DropdownOptionsActive) { item.remove(); }
@@ -23,9 +35,11 @@ function displayDropdownOptions(items) {
             if (DropdownOptionsExists != null) {
                 DropdownOptionsExists.remove()
                 button.style.width = "190px"
+                searchInputTag.style.display = 'none'
             } else {
                 button.appendChild(DropdownOptions)
                 button.style.width = "900px"
+                searchInputTag.style.display = 'block'
             }
 
             let rowDropdown = document.createElement('div')
@@ -50,7 +64,8 @@ function displayDropdownOptions(items) {
                 case 'ustensiles':
                     newItems = getUstensils(items)
                     elementBackgroundColor = '#ED6454'
-                    break }
+                    break
+            }
 
             let arrayOf3 = splitArray(newItems, 3)
             let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 

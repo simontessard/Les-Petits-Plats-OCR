@@ -74,6 +74,7 @@ button {
 .filter-button.active {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    color: transparent;
 }
 .dropdown-option {
     display: inline-block;
@@ -125,6 +126,29 @@ button:focus {outline:0;}
     width: 25px;
     margin-left: 15px;
     filter: invert(100%);
+}
+
+.typing-bar {
+    width: 100%;
+    margin: 0;
+    padding: 0.4em;
+    text-indent: 2em;
+    border: 0;
+    border-radius: 4px;
+    font: inherit;
+    font-weight: 700;
+    background: var(--cp-color-15);
+    height: 25px;
+    position: relative;
+    left: -120px;
+}
+
+.typing-bar::placeholder {
+    color: rgba(255, 255, 255, 0.986);
+}
+
+.typing-bar:focus{
+    outline: none;
 }
 
 /* CARDS */

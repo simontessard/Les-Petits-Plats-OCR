@@ -1,0 +1,5 @@
+function mainResearch() {
+
+}
+
+export { mainResearch }

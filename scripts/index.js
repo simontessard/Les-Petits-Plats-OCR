@@ -1,6 +1,7 @@
 import { recipeFactory } from "./factories/recipe.js";
 import { recipes } from "./data/recipes.js";
 import { displayDropdownOptions } from "./research_tag.js"
+import { mainResearch } from "./research_main.js"
 import { filterButtonFactory, createFilterButton } from "./factories/filterButton.js";
 
 function getIngredients(recipes) {
@@ -69,6 +70,7 @@ async function init () {
   displayData(recipes)
   createFilterButton()
   displayDropdownOptions(recipes)
+  mainResearch()
 };
   
 init()
