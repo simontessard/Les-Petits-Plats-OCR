@@ -12,25 +12,17 @@ function filterButtonFactory(name) {
   return { getFilterButtonDOM }
 }
 
-function createFilterButton() {
+function initFilterButtons() {
   const btnGroup = document.querySelector('.btn-group')
+  btnGroup.append(createFilterButton('ingredients'), createFilterButton('appareils'), createFilterButton('ustensiles'))
+}
 
-  const ingredientsButtonModel = filterButtonFactory('ingredients')
-  const ingredientsButton = ingredientsButtonModel.getFilterButtonDOM()
-  ingredientsButton.name = 'ingredients'
-  ingredientsButton.appendChild(createInputTextTag('ingredients'))
-
-  const appareilsButtonModel = filterButtonFactory('appareils')
-  const appareilsButton = appareilsButtonModel.getFilterButtonDOM()
-  appareilsButton.name = 'appareils'
-  appareilsButton.appendChild(createInputTextTag('appareils'))
-
-  const ustensilesButtonModel = filterButtonFactory('ustensiles')
-  const ustensilesButton = ustensilesButtonModel.getFilterButtonDOM()
-  ustensilesButton.name = 'ustensiles'
-  ustensilesButton.appendChild(createInputTextTag('ustensiles'))
-
-  btnGroup.append(ingredientsButton, appareilsButton, ustensilesButton)
+function createFilterButton(name) {
+  const ButtonModel = filterButtonFactory(name)
+  const Button = ButtonModel.getFilterButtonDOM()
+  Button.name = name
+  Button.appendChild(createInputTextTag(name))
+  return Button
 }
 
 function createInputTextTag(name) {
@@ -48,4 +40,4 @@ function createInputTextTag(name) {
   return (searchInputTag)
 }
 
-export { filterButtonFactory, createFilterButton }
+export { filterButtonFactory, initFilterButtons }
