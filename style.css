@@ -52,24 +52,25 @@ button {
     width: 190px;
     justify-content: space-between;
 }
-.filter-button::after {
+.dropdown-arrow {
     content: '';
     position: relative;
     z-index: 3;
-    top: 10px;
+    top: 8px;
     margin-left: 30px;
     transition: 0.5s;
-    pointer-events: none;
     border: solid white;
     border-width: 0 3px 3px 0;
     display: inline-block;
     padding: 3px;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
+    cursor: pointer;
 }
-.filter-button.active::after {
+.filter-button.active .dropdown-arrow {
     transform: rotate(-135deg);
     -webkit-transform: rotate(-135deg);
+    left: 87%;
 }
 .filter-button.active {
     border-bottom-left-radius: 0px;
@@ -132,7 +133,6 @@ button:focus {outline:0;}
     width: 100%;
     margin: 0;
     padding: 0.4em;
-    text-indent: 2em;
     border: 0;
     border-radius: 4px;
     font: inherit;
@@ -140,7 +140,7 @@ button:focus {outline:0;}
     background: var(--cp-color-15);
     height: 25px;
     position: relative;
-    left: -120px;
+    left: -125px;
 }
 
 .typing-bar::placeholder {

@@ -42,6 +42,14 @@ function displayDropdownOptions(items) {
                 searchInputTag.style.display = 'block'
             }
 
+            // Disable the closing of dropdown on click
+            DropdownOptions.addEventListener('click', function (e) {
+                e.stopPropagation()
+            })
+            searchInputTag.addEventListener('click', function (e) {
+                e.stopPropagation()
+            })
+
             let rowDropdown = document.createElement('div')
             rowDropdown.setAttribute('class', 'dropdown-row')
             DropdownOptions.appendChild(rowDropdown)

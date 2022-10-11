@@ -21,8 +21,14 @@ function createFilterButton(name) {
   const ButtonModel = filterButtonFactory(name)
   const Button = ButtonModel.getFilterButtonDOM()
   Button.name = name
-  Button.appendChild(createInputTextTag(name))
+  Button.append(createDropdownArrow(), createInputTextTag(name))
   return Button
+}
+
+function createDropdownArrow() {
+  const dropdownArrow = document.createElement('div')
+  dropdownArrow.setAttribute('class', 'dropdown-arrow')
+  return dropdownArrow
 }
 
 function createInputTextTag(name) {
