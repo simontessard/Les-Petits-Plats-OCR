@@ -1,8 +1,9 @@
 import { getAppareils, getIngredients, getUstensils } from "./index.js";
 
+const filtersSection = document.querySelector('.active-filters')
+
 function displayDropdownOptions(items) {
     const allFilterButtons = document.querySelectorAll('.filter-button')
-    const filtersSection = document.querySelector('.active-filters')
 
     allFilterButtons.forEach(button => {
         button.addEventListener('click', function listingTag() {
@@ -24,23 +25,47 @@ function displayDropdownOptions(items) {
             DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
 
             const DropdownOptionsExists = document.getElementById(button.name + 'DropdownMenu')
-            const DropdownOptionsActive = document.getElementsByClassName('dropdown-option')
 
             let searchInputTag = document.getElementById('searchInput' + button.name)
 
-            if (DropdownOptionsActive != null) {
-                for (let item of DropdownOptionsActive) { item.remove(); }
-            }
+            deleteActiveDropdownOptions('dropdown-option')
 
             if (DropdownOptionsExists != null) {
                 DropdownOptionsExists.remove()
                 button.style.width = "190px"
                 searchInputTag.style.display = 'none'
+                searchInputTag.value = ''
             } else {
                 button.appendChild(DropdownOptions)
                 button.style.width = "900px"
                 searchInputTag.style.display = 'block'
+                searchInputTag.value = ''
             }
+
+            searchInputTag.addEventListener('input', function () {
+                deleteActiveDropdownOptions('dropdown-item')
+
+                switch (this.parentElement.name) {
+                    case 'ingredients':
+                        newItems = getIngredients(items)
+                        elementBackgroundColor = '#3282f7'
+                        break
+                    case 'appareils':
+                        newItems = getAppareils(items)
+                        elementBackgroundColor = '#68D9A4'
+                        break
+                    case 'ustensiles':
+                        newItems = getUstensils(items)
+                        elementBackgroundColor = '#ED6454'
+                        break
+                }
+
+                // Research if characters entered by the user are in one of the tag in real time
+                let resultResearch = newItems.filter(tag => tag.includes(this.value) || tag.toUpperCase().includes(this.value) || tag.toLowerCase().includes(this.value))
+
+                // Update the tag list displayed in the dropdown with result from the search
+                createDropdownList(resultResearch, elementBackgroundColor)
+            })
 
             // Disable the closing of dropdown on click
             DropdownOptions.addEventListener('click', function (e) {
@@ -75,40 +100,47 @@ function displayDropdownOptions(items) {
                     break
             }
 
-            let arrayOf3 = splitArray(newItems, 3)
-            let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 
-
-            for (let rowNumber = 0; rowNumber < min; rowNumber++) {
-
-                arrayOf3[rowNumber].forEach(ingredient => {
-                    const itemDropdown = document.createElement('a')
-                    itemDropdown.setAttribute('class', 'dropdown-item')
-                    itemDropdown.innerText = ingredient.charAt(0).toUpperCase() + ingredient.slice(1);
-                    itemDropdown.addEventListener('click', function () {
-                        let activeFilterElement = document.createElement('div');
-                        activeFilterElement.setAttribute('class', 'filter-element');
-
-                        let activeFilterText = document.createElement('p');
-                        activeFilterText.innerText = itemDropdown.textContent;
-                        activeFilterText.setAttribute('class', 'filter-tag')
-                        activeFilterElement.appendChild(activeFilterText)
-
-                        let activeFilterImg = document.createElement('img');
-                        activeFilterImg.setAttribute('src', 'assets/icons/times-circle-regular.svg')
-                        activeFilterImg.setAttribute('class', 'filter-cross')
-                        activeFilterImg.addEventListener('click', function () {
-                            activeFilterElement.remove()
-                        })
-                        activeFilterElement.style.backgroundColor = elementBackgroundColor
-
-                        activeFilterElement.appendChild(activeFilterImg)
-                        filtersSection.appendChild(activeFilterElement)
-                    })
-                    rowDropdown.appendChild(itemDropdown)
-                })
-            }
+            createDropdownList(newItems, elementBackgroundColor)
         })
     });
+}
+
+async function createDropdownList(items, elementBackgroundColor) {
+    let arrayOf3 = splitArray(items, 3)
+    let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 
+
+    for (let rowNumber = 0; rowNumber < min; rowNumber++) {
+
+        arrayOf3[rowNumber].forEach(ingredient => {
+            const itemDropdown = document.createElement('a')
+            itemDropdown.setAttribute('class', 'dropdown-item')
+            itemDropdown.innerText = ingredient.charAt(0).toUpperCase() + ingredient.slice(1);
+            itemDropdown.addEventListener('click', function () {
+                let activeFilterElement = document.createElement('div');
+                activeFilterElement.setAttribute('class', 'filter-element');
+
+                let activeFilterText = document.createElement('p');
+                activeFilterText.innerText = itemDropdown.textContent;
+                activeFilterText.setAttribute('class', 'filter-tag')
+                activeFilterElement.appendChild(activeFilterText)
+
+                let activeFilterImg = document.createElement('img');
+                activeFilterImg.setAttribute('src', 'assets/icons/times-circle-regular.svg')
+                activeFilterImg.setAttribute('class', 'filter-cross')
+                activeFilterImg.addEventListener('click', function () {
+                    activeFilterElement.remove()
+                })
+                activeFilterElement.style.backgroundColor = elementBackgroundColor
+
+                activeFilterElement.appendChild(activeFilterImg)
+                filtersSection.appendChild(activeFilterElement)
+            })
+            let rowDropdown = document.querySelector('.dropdown-row')
+            if (rowDropdown != null) {
+                rowDropdown.appendChild(itemDropdown)
+            }
+        })
+    }
 }
 
 function splitArray(array, splitSize) {
@@ -118,6 +150,15 @@ function splitArray(array, splitSize) {
         result.push(newArray);
     }
     return result;
+}
+
+function deleteActiveDropdownOptions(dropdownClass) {
+    let dropdownOptionsActive = document.getElementsByClassName(dropdownClass)
+    console.log(dropdownOptionsActive)
+    dropdownOptionsActive = Array.from(dropdownOptionsActive);
+    if (dropdownOptionsActive != null) {
+        for (let item of dropdownOptionsActive) { item.remove(); }
+    }
 }
 
 export { displayDropdownOptions }
