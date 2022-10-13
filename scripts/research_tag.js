@@ -45,20 +45,8 @@ function displayDropdownOptions(items) {
             searchInputTag.addEventListener('input', function () {
                 deleteActiveDropdownOptions('dropdown-item')
 
-                switch (this.parentElement.name) {
-                    case 'ingredients':
-                        newItems = getIngredients(items)
-                        elementBackgroundColor = '#3282f7'
-                        break
-                    case 'appareils':
-                        newItems = getAppareils(items)
-                        elementBackgroundColor = '#68D9A4'
-                        break
-                    case 'ustensiles':
-                        newItems = getUstensils(items)
-                        elementBackgroundColor = '#ED6454'
-                        break
-                }
+                let newItems = whichButton(this.parentElement.name, items)[0]
+                let elementBackgroundColor = whichButton(this.parentElement.name, items)[1]
 
                 // Research if characters entered by the user are in one of the tag in real time
                 let resultResearch = newItems.filter(tag => tag.includes(this.value) || tag.toUpperCase().includes(this.value) || tag.toLowerCase().includes(this.value))
@@ -82,23 +70,8 @@ function displayDropdownOptions(items) {
             DropdownOptions.setAttribute('id', button.name + 'DropdownMenu')
             DropdownOptions.setAttribute('aria-labelledby', 'btn-' + button.name)
 
-            let newItems
-            let elementBackgroundColor
-
-            switch (button.name) {
-                case 'ingredients':
-                    newItems = getIngredients(items)
-                    elementBackgroundColor = '#3282f7'
-                    break
-                case 'appareils':
-                    newItems = getAppareils(items)
-                    elementBackgroundColor = '#68D9A4'
-                    break
-                case 'ustensiles':
-                    newItems = getUstensils(items)
-                    elementBackgroundColor = '#ED6454'
-                    break
-            }
+            let newItems = whichButton(button.name, items)[0]
+            let elementBackgroundColor = whichButton(button.name, items)[1]
 
             createDropdownList(newItems, elementBackgroundColor)
         })
@@ -159,6 +132,28 @@ function deleteActiveDropdownOptions(dropdownClass) {
     if (dropdownOptionsActive != null) {
         for (let item of dropdownOptionsActive) { item.remove(); }
     }
+}
+
+function whichButton(name, items) {
+    let newItems
+    let elementBackgroundColor
+
+    switch (name) {
+        case 'ingredients':
+            newItems = getIngredients(items)
+            elementBackgroundColor = '#3282f7'
+            break
+        case 'appareils':
+            newItems = getAppareils(items)
+            elementBackgroundColor = '#68D9A4'
+            break
+        case 'ustensiles':
+            newItems = getUstensils(items)
+            elementBackgroundColor = '#ED6454'
+            break
+    }
+
+    return [newItems, elementBackgroundColor]
 }
 
 export { displayDropdownOptions }
