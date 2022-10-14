@@ -63,7 +63,7 @@ async function displayData (recipes) {
         col.appendChild(recipeCardDOM)
       })
     }
-  };
+};
 
 async function init () {
   // Initialise les données recettes
@@ -75,4 +75,4 @@ async function init () {
   
 init()
 
-export { getAppareils, getIngredients, getUstensils }
+export { getAppareils, getIngredients, getUstensils, displayData }
