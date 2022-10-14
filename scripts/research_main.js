@@ -1,5 +1,6 @@
 import { recipes } from "./data/recipes.js";
 import { displayData } from "./index.js";
+import { displayDropdownOptions } from "./research_tag.js"
 
 function mainResearch() {
     const searchBar = document.querySelector('.form-control')
@@ -29,10 +30,12 @@ function mainResearch() {
             }
             cardsContainer.innerHTML = ''
             displayData(recipesFromSearchBar)
+            displayDropdownOptions(recipesFromSearchBar)
         }
         else {
             cardsContainer.innerHTML = ''
             displayData(recipes)
+            displayDropdownOptions(recipes)
         }
     })
 }
