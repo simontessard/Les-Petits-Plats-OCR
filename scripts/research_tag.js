@@ -127,7 +127,6 @@ function splitArray(array, splitSize) {
 
 function deleteActiveDropdownOptions(dropdownClass) {
     let dropdownOptionsActive = document.getElementsByClassName(dropdownClass)
-    console.log(dropdownOptionsActive)
     dropdownOptionsActive = Array.from(dropdownOptionsActive);
     if (dropdownOptionsActive != null) {
         for (let item of dropdownOptionsActive) { item.remove(); }
