@@ -151,6 +151,11 @@ button:focus {outline:0;}
     outline: none;
 }
 
+.msgNoResult {
+    margin-left: 3.5rem;
+    margin-top: 2rem;
+}
+
 /* CARDS */
 .card-img-top {
     height: 200px;

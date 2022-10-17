@@ -5,6 +5,7 @@ import { displayDropdownOptions } from "./research_tag.js"
 function mainResearch() {
     const searchBar = document.querySelector('.form-control')
     const cardsContainer = document.querySelector('.card-deck')
+    const groupButtons = document.querySelector('.btn-group')
     // const allCards = document.getElementsByClassName('card')
 
     searchBar.addEventListener('input', function () {
@@ -29,15 +30,37 @@ function mainResearch() {
                 }
             }
             cardsContainer.innerHTML = ''
-            displayData(recipesFromSearchBar)
+            if (recipesFromSearchBar.length >0 ) {
+                displayData(recipesFromSearchBar)
+                removeMsgNoResult()
+            }
+            else {
+                groupButtons.after(createMsgNoResult())
+            }
             displayDropdownOptions(recipesFromSearchBar)
         }
         else {
             cardsContainer.innerHTML = ''
             displayData(recipes)
             displayDropdownOptions(recipes)
+            removeMsgNoResult()
         }
     })
+}
+
+function createMsgNoResult() {
+    removeMsgNoResult()
+    const msgNoResult = document.createElement('p')
+    msgNoResult.textContent = 'Aucun résultat trouvé'
+    msgNoResult.setAttribute('class', 'msgNoResult')
+    return msgNoResult
+}
+
+function removeMsgNoResult() {
+    const msgNoResult = document.querySelector('.msgNoResult')
+    if (msgNoResult != null) {
+        msgNoResult.remove()
+    }
 }
 
 export { mainResearch }
