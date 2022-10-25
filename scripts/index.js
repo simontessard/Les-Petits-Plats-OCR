@@ -1,6 +1,6 @@
 import { recipeFactory } from "./factories/recipe.js";
 import { recipes } from "./data/recipes.js";
-import { displayDropdownOptions } from "./research_tag.js"
+import { displayDropdownOptions, addListenerToFilterButton } from "./research_tag.js"
 import { mainResearch } from "./research_main.js"
 import { filterButtonFactory, initFilterButtons } from "./factories/filterButton.js";
 
@@ -69,7 +69,7 @@ async function init () {
   // Initialise les données recettes
   displayData(recipes)
   initFilterButtons()
-  displayDropdownOptions(recipes)
+  addListenerToFilterButton(recipes)
   mainResearch()
 };
   

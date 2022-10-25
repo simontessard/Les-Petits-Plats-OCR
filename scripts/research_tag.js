@@ -2,83 +2,80 @@ import { getAppareils, getIngredients, getUstensils } from "./index.js";
 
 const filtersSection = document.querySelector('.active-filters')
 
-function displayDropdownOptions(items) {
+function addListenerToFilterButton(recipes) {
     const allFilterButtons = document.querySelectorAll('.filter-button')
 
     allFilterButtons.forEach(button => {
-        button.addEventListener('click', function listingTag() {
-
+        button.addEventListener('click', function openCloseDropdown() {
+            // Case button to other button click
             allFilterButtons.forEach(oneButton => {
                 if (oneButton.name != button.name) {
-                    oneButton.style.width = "190px"
+                    let searchInputTag = document.getElementById('searchInput' + oneButton.name)
+                    searchInputTag.classList.remove('active')
                     oneButton.classList.remove('active')
                 }
             })
-
-            if (button.classList.value == 'filter-button active') {
+            let searchInputTag = document.getElementById('searchInput' + button.name)
+            // Case button click to same button
+            if (button.classList.contains('active')) {
                 button.classList.remove('active')
+                searchInputTag.classList.remove('active')
+                deleteActiveDropdownOptions('dropdown-option')
             } else {
                 button.classList.add('active')
-            }
-
-            const DropdownOptions = document.createElement('div')
-            DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
-
-            const DropdownOptionsExists = document.getElementById(button.name + 'DropdownMenu')
-
-            let searchInputTag = document.getElementById('searchInput' + button.name)
-
-            deleteActiveDropdownOptions('dropdown-option')
-
-            if (DropdownOptionsExists != null) {
-                DropdownOptionsExists.remove()
-                button.style.width = "190px"
-                searchInputTag.style.display = 'none'
+                searchInputTag.classList.add('active')
                 searchInputTag.value = ''
-            } else {
-                button.appendChild(DropdownOptions)
-                button.style.width = "900px"
-                searchInputTag.style.display = 'block'
-                searchInputTag.value = ''
+                displayDropdownOptions(recipes, button)
             }
-
-            searchInputTag.addEventListener('input', function () {
-                deleteActiveDropdownOptions('dropdown-item')
-
-                let newItems = whichButton(this.parentElement.name, items)[0]
-                let elementBackgroundColor = whichButton(this.parentElement.name, items)[1]
-
-                // Research if characters entered by the user are in one of the tag in real time
-                let resultResearch = newItems.filter(tag => tag.includes(this.value) || tag.toUpperCase().includes(this.value) || tag.toLowerCase().includes(this.value))
-
-                // Update the tag list displayed in the dropdown with result from the search
-                createDropdownList(resultResearch, elementBackgroundColor)
-            })
-
-            // Disable the closing of dropdown on click
-            DropdownOptions.addEventListener('click', function (e) {
-                e.stopPropagation()
-            })
-            searchInputTag.addEventListener('click', function (e) {
-                e.stopPropagation()
-            })
-
-            let rowDropdown = document.createElement('div')
-            rowDropdown.setAttribute('class', 'dropdown-row')
-            DropdownOptions.appendChild(rowDropdown)
-
-            DropdownOptions.setAttribute('id', button.name + 'DropdownMenu')
-            DropdownOptions.setAttribute('aria-labelledby', 'btn-' + button.name)
-
-            let newItems = whichButton(button.name, items)[0]
-            let elementBackgroundColor = whichButton(button.name, items)[1]
-
-            createDropdownList(newItems, elementBackgroundColor)
         })
-    });
+    })
 }
 
-async function createDropdownList(items, elementBackgroundColor) {
+function displayDropdownOptions(items, button) {
+        const DropdownOptions = document.createElement('div')
+        DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
+
+        let searchInputTag = document.getElementById('searchInput' + button.name)
+
+        deleteActiveDropdownOptions('dropdown-option')
+
+        button.appendChild(DropdownOptions)
+
+        searchInputTag.addEventListener('input', function () {
+            deleteActiveDropdownOptions('dropdown-item')
+
+            let newItems = whichButton(this.parentElement.name, items)[0]
+            let elementBackgroundColor = whichButton(this.parentElement.name, items)[1]
+
+            // Research if characters entered by the user are in one of the tag in real time
+            let resultResearch = newItems.filter(tag => tag.includes(this.value) || tag.toUpperCase().includes(this.value) || tag.toLowerCase().includes(this.value))
+
+            // Update the tag list displayed in the dropdown with result from the search
+            createDropdownList(resultResearch, elementBackgroundColor)
+        })
+
+        // Disable the closing of dropdown on click
+        DropdownOptions.addEventListener('click', function (e) {
+            e.stopPropagation()
+        })
+        searchInputTag.addEventListener('click', function (e) {
+            e.stopPropagation()
+        })
+
+        let rowDropdown = document.createElement('div')
+        rowDropdown.setAttribute('class', 'dropdown-row')
+        DropdownOptions.appendChild(rowDropdown)
+
+        DropdownOptions.setAttribute('id', button.name + 'DropdownMenu')
+        DropdownOptions.setAttribute('aria-labelledby', 'btn-' + button.name)
+
+        let newItems = whichButton(button.name, items)[0]
+        let elementBackgroundColor = whichButton(button.name, items)[1]
+
+        createDropdownList(newItems, elementBackgroundColor, rowDropdown)
+}
+
+async function createDropdownList(items, elementBackgroundColor, rowDropdown) {
     let arrayOf3 = splitArray(items, 3)
     let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 
 
@@ -108,7 +105,6 @@ async function createDropdownList(items, elementBackgroundColor) {
                 activeFilterElement.appendChild(activeFilterImg)
                 filtersSection.appendChild(activeFilterElement)
             })
-            let rowDropdown = document.querySelector('.dropdown-row')
             if (rowDropdown != null) {
                 rowDropdown.appendChild(itemDropdown)
             }
@@ -130,7 +126,7 @@ function deleteActiveDropdownOptions(dropdownClass) {
     dropdownOptionsActive = Array.from(dropdownOptionsActive);
     if (dropdownOptionsActive != null) {
         for (let item of dropdownOptionsActive) { item.remove(); }
-    }
+    } 
 }
 
 function whichButton(name, items) {
@@ -155,4 +151,4 @@ function whichButton(name, items) {
     return [newItems, elementBackgroundColor]
 }
 
-export { displayDropdownOptions }
+export { displayDropdownOptions, addListenerToFilterButton }

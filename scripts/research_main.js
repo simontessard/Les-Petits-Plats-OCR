@@ -37,12 +37,12 @@ function mainResearch() {
             else {
                 groupButtons.after(createMsgNoResult())
             }
-            displayDropdownOptions(recipesFromSearchBar)
+            // displayDropdownOptions(recipesFromSearchBar)
         }
         else {
             cardsContainer.innerHTML = ''
             displayData(recipes)
-            displayDropdownOptions(recipes)
+            // displayDropdownOptions(recipes)
             removeMsgNoResult()
         }
     })
