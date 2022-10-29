@@ -1,12 +1,11 @@
 import { recipes } from "./data/recipes.js";
 import { displayData } from "./index.js";
-import { displayDropdownOptions } from "./research_tag.js"
+import { createDropdownOptions, deleteAllDropdownOptions, displayHideDropdownOptions } from "./research_tag.js"
 
 function mainResearch() {
     const searchBar = document.querySelector('.form-control')
     const cardsContainer = document.querySelector('.card-deck')
     const groupButtons = document.querySelector('.btn-group')
-    // const allCards = document.getElementsByClassName('card')
 
     searchBar.addEventListener('input', function () {
         let recipesFromSearchBar = []
@@ -14,37 +13,56 @@ function mainResearch() {
             for (let i = 0; i < recipes.length; i++) {
 
                 let actualRecipe = recipes[i]
-
+                // Search for name 
                 if (actualRecipe.name.toLowerCase().includes(this.value) || actualRecipe.name.toUpperCase().includes(this.value) || actualRecipe.name.includes(this.value)) {
                     recipesFromSearchBar.push(actualRecipe)
                 }
+                // Search for description
                 else if (actualRecipe.description.toLowerCase().includes(this.value) || actualRecipe.description.toUpperCase().includes(this.value) || actualRecipe.description.includes(this.value)) {
                     recipesFromSearchBar.push(actualRecipe)
-                }
+                } 
                 else {
-                    actualRecipe.ingredients.forEach(ingredient => {
-                        if (ingredient.ingredient.toLowerCase().includes(this.value) || ingredient.ingredient.toUpperCase().includes(this.value) || ingredient.ingredient.includes(this.value)) {
+                    // Search for ingredient
+                    for (let a = 0; a < actualRecipe.ingredients.length ; a++) {
+                        let actualIngredient = actualRecipe.ingredients[a]
+
+                        if (actualIngredient.ingredient.toLowerCase().includes(this.value) || actualIngredient.ingredient.toUpperCase().includes(this.value) || actualIngredient.ingredient.includes(this.value)) {
                             recipesFromSearchBar.push(actualRecipe)
                         }
-                    });
+                    }
                 }
             }
             cardsContainer.innerHTML = ''
-            if (recipesFromSearchBar.length >0 ) {
+            if (recipesFromSearchBar.length > 0 ) {
                 displayData(recipesFromSearchBar)
+                deleteAllDropdownOptions()
+                createDropdownOptions(recipesFromSearchBar)
                 removeMsgNoResult()
             }
             else {
                 groupButtons.after(createMsgNoResult())
             }
-            // displayDropdownOptions(recipesFromSearchBar)
         }
         else {
             cardsContainer.innerHTML = ''
             displayData(recipes)
-            // displayDropdownOptions(recipes)
+            deleteAllDropdownOptions()
+            createDropdownOptions(recipes)
             removeMsgNoResult()
         }
+    })
+    searchBar.addEventListener('click', function(){
+        const allFilterButtons = document.querySelectorAll('.filter-button')
+
+        allFilterButtons.forEach(button => {
+        let searchInputTag = document.getElementById('searchInput' + button.name)
+
+            if (button.classList.contains('active')) {
+                button.classList.remove('active')
+                searchInputTag.classList.remove('active')
+                displayHideDropdownOptions(button, 'none')
+            }
+        })
     })
 }
 

@@ -2,7 +2,7 @@ import { getAppareils, getIngredients, getUstensils } from "./index.js";
 
 const filtersSection = document.querySelector('.active-filters')
 
-function addListenerToFilterButton(recipes) {
+function addListenerToFilterButton() {
     const allFilterButtons = document.querySelectorAll('.filter-button')
 
     allFilterButtons.forEach(button => {
@@ -12,7 +12,9 @@ function addListenerToFilterButton(recipes) {
                 if (oneButton.name != button.name) {
                     let searchInputTag = document.getElementById('searchInput' + oneButton.name)
                     searchInputTag.classList.remove('active')
+                    searchInputTag.value = ''
                     oneButton.classList.remove('active')
+                    displayHideDropdownOptions(oneButton, 'none')
                 }
             })
             let searchInputTag = document.getElementById('searchInput' + button.name)
@@ -20,42 +22,41 @@ function addListenerToFilterButton(recipes) {
             if (button.classList.contains('active')) {
                 button.classList.remove('active')
                 searchInputTag.classList.remove('active')
-                deleteActiveDropdownOptions('dropdown-option')
+                displayHideDropdownOptions(button, 'none')
             } else {
                 button.classList.add('active')
                 searchInputTag.classList.add('active')
                 searchInputTag.value = ''
-                displayDropdownOptions(recipes, button)
+                displayHideDropdownOptions(button, 'block')
             }
         })
     })
 }
 
-function displayDropdownOptions(items, button) {
-        const DropdownOptions = document.createElement('div')
-        DropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
+function createDropdownOptions(items) {
+    const allFilterButtons = document.querySelectorAll('.filter-button')
+
+    allFilterButtons.forEach(button => {
+        const dropdownOptions = document.createElement('div')
+        dropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
 
         let searchInputTag = document.getElementById('searchInput' + button.name)
 
-        deleteActiveDropdownOptions('dropdown-option')
-
-        button.appendChild(DropdownOptions)
+        button.appendChild(dropdownOptions)
 
         searchInputTag.addEventListener('input', function () {
-            deleteActiveDropdownOptions('dropdown-item')
+            deleteActiveDropdownOptions(button.id, 'dropdown-item') 
 
             let newItems = whichButton(this.parentElement.name, items)[0]
             let elementBackgroundColor = whichButton(this.parentElement.name, items)[1]
-
             // Research if characters entered by the user are in one of the tag in real time
             let resultResearch = newItems.filter(tag => tag.includes(this.value) || tag.toUpperCase().includes(this.value) || tag.toLowerCase().includes(this.value))
-
             // Update the tag list displayed in the dropdown with result from the search
-            createDropdownList(resultResearch, elementBackgroundColor)
+            createDropdownList(resultResearch, elementBackgroundColor, this.nextSibling.firstChild)
         })
 
         // Disable the closing of dropdown on click
-        DropdownOptions.addEventListener('click', function (e) {
+        dropdownOptions.addEventListener('click', function (e) {
             e.stopPropagation()
         })
         searchInputTag.addEventListener('click', function (e) {
@@ -64,18 +65,26 @@ function displayDropdownOptions(items, button) {
 
         let rowDropdown = document.createElement('div')
         rowDropdown.setAttribute('class', 'dropdown-row')
-        DropdownOptions.appendChild(rowDropdown)
+        dropdownOptions.appendChild(rowDropdown)
 
-        DropdownOptions.setAttribute('id', button.name + 'DropdownMenu')
-        DropdownOptions.setAttribute('aria-labelledby', 'btn-' + button.name)
+        dropdownOptions.setAttribute('id', button.name + 'DropdownMenu')
+        dropdownOptions.setAttribute('aria-labelledby', 'btn-' + button.name)
+        dropdownOptions.style.display = 'none'
 
         let newItems = whichButton(button.name, items)[0]
         let elementBackgroundColor = whichButton(button.name, items)[1]
 
         createDropdownList(newItems, elementBackgroundColor, rowDropdown)
+    })
 }
 
-async function createDropdownList(items, elementBackgroundColor, rowDropdown) {
+function displayHideDropdownOptions(button, statut) {
+    let buttonName = button.name
+    const dropdownsOptions = document.getElementById(buttonName + 'DropdownMenu')
+    dropdownsOptions.style.display = statut
+}
+
+function createDropdownList(items, elementBackgroundColor, rowDropdown) {
     let arrayOf3 = splitArray(items, 3)
     let min = arrayOf3.length > 10 ? 10 : arrayOf3.length // instruction ternaire 
 
@@ -121,12 +130,20 @@ function splitArray(array, splitSize) {
     return result;
 }
 
-function deleteActiveDropdownOptions(dropdownClass) {
-    let dropdownOptionsActive = document.getElementsByClassName(dropdownClass)
+function deleteActiveDropdownOptions(buttonId, dropdownClass) {
+    let dropdownOptionsActive = document.querySelectorAll('#'+ buttonId +' .'+dropdownClass)
     dropdownOptionsActive = Array.from(dropdownOptionsActive);
     if (dropdownOptionsActive != null) {
         for (let item of dropdownOptionsActive) { item.remove(); }
-    } 
+    }
+}
+
+function deleteAllDropdownOptions() {
+    let dropdownOptionsAll = document.getElementsByClassName('dropdown-option')
+    let allDropdownOptionsActive = Array.from(dropdownOptionsAll);
+    allDropdownOptionsActive.forEach(oneDropdown => {
+        oneDropdown.remove()
+    })
 }
 
 function whichButton(name, items) {
@@ -147,8 +164,7 @@ function whichButton(name, items) {
             elementBackgroundColor = '#ED6454'
             break
     }
-
     return [newItems, elementBackgroundColor]
 }
 
-export { displayDropdownOptions, addListenerToFilterButton }
+export { addListenerToFilterButton, createDropdownOptions, deleteAllDropdownOptions, displayHideDropdownOptions }
