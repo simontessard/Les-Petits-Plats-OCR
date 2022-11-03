@@ -1,6 +1,7 @@
 import { getAppareils, getIngredients, getUstensils } from "./index.js";
 
 const filtersSection = document.querySelector('.active-filters')
+let filtersArray = []
 
 function addListenerToFilterButton() {
     const allFilterButtons = document.querySelectorAll('.filter-button')
@@ -45,7 +46,7 @@ function createDropdownOptions(items) {
         button.appendChild(dropdownOptions)
 
         searchInputTag.addEventListener('input', function () {
-            deleteActiveDropdownOptions(button.id, 'dropdown-item') 
+            deleteActiveDropdownOptions(button.id, 'dropdown-item')
 
             let newItems = whichButton(this.parentElement.name, items)[0]
             let elementBackgroundColor = whichButton(this.parentElement.name, items)[1]
@@ -94,25 +95,51 @@ function createDropdownList(items, elementBackgroundColor, rowDropdown) {
             const itemDropdown = document.createElement('a')
             itemDropdown.setAttribute('class', 'dropdown-item')
             itemDropdown.innerText = ingredient.charAt(0).toUpperCase() + ingredient.slice(1);
-            itemDropdown.addEventListener('click', function () {
-                let activeFilterElement = document.createElement('div');
-                activeFilterElement.setAttribute('class', 'filter-element');
+            itemDropdown.addEventListener('click', function (e) {
+                if (itemDropdown.classList.contains('selected')) {
+                    itemDropdown.classList.remove('selected');
 
-                let activeFilterText = document.createElement('p');
-                activeFilterText.innerText = itemDropdown.textContent;
-                activeFilterText.setAttribute('class', 'filter-tag')
-                activeFilterElement.appendChild(activeFilterText)
+                    let allActiveFilters = document.getElementsByClassName('filter-tag')
+                    allActiveFilters = Array.from(allActiveFilters)
 
-                let activeFilterImg = document.createElement('img');
-                activeFilterImg.setAttribute('src', 'assets/icons/times-circle-regular.svg')
-                activeFilterImg.setAttribute('class', 'filter-cross')
-                activeFilterImg.addEventListener('click', function () {
-                    activeFilterElement.remove()
-                })
-                activeFilterElement.style.backgroundColor = elementBackgroundColor
+                    if (allActiveFilters !== null) {
+                        allActiveFilters.forEach(oneFilter => {
+                            if (oneFilter.textContent === itemDropdown.innerText) {
+                                oneFilter.parentElement.remove()
+                                filtersArray = filtersArray.filter(function (e) { return e !== oneFilter.textContent })
+                            }
+                        })
+                    }
+                } else {
+                    itemDropdown.classList.add('selected');
+                }
 
-                activeFilterElement.appendChild(activeFilterImg)
-                filtersSection.appendChild(activeFilterElement)
+                if (itemDropdown.classList.contains('selected')) {
+                    let activeFilterElement = document.createElement('div');
+                    activeFilterElement.setAttribute('class', 'filter-element');
+
+                    let activeFilterText = document.createElement('p');
+                    activeFilterText.innerText = itemDropdown.textContent;
+                    activeFilterText.setAttribute('class', 'filter-tag')
+                    activeFilterElement.appendChild(activeFilterText)
+
+                    let activeFilterImg = document.createElement('img');
+                    activeFilterImg.setAttribute('src', 'assets/icons/times-circle-regular.svg')
+                    activeFilterImg.setAttribute('class', 'filter-cross')
+
+                    // Click cross to delete an active tag
+                    activeFilterImg.addEventListener('click', function () {
+                        activeFilterElement.remove()
+                        itemDropdown.classList.remove('selected');
+                        resetTag(activeFilterText.textContent)
+                    })
+                    activeFilterElement.style.backgroundColor = elementBackgroundColor
+
+                    activeFilterElement.appendChild(activeFilterImg)
+                    filtersSection.appendChild(activeFilterElement)
+
+                    addTag(activeFilterText.textContent)
+                }
             })
             if (rowDropdown != null) {
                 rowDropdown.appendChild(itemDropdown)
@@ -131,7 +158,7 @@ function splitArray(array, splitSize) {
 }
 
 function deleteActiveDropdownOptions(buttonId, dropdownClass) {
-    let dropdownOptionsActive = document.querySelectorAll('#'+ buttonId +' .'+dropdownClass)
+    let dropdownOptionsActive = document.querySelectorAll('#' + buttonId + ' .' + dropdownClass)
     dropdownOptionsActive = Array.from(dropdownOptionsActive);
     if (dropdownOptionsActive != null) {
         for (let item of dropdownOptionsActive) { item.remove(); }
@@ -165,6 +192,64 @@ function whichButton(name, items) {
             break
     }
     return [newItems, elementBackgroundColor]
+}
+
+function addTag(tag) {
+    let activeFiltersText = document.querySelectorAll('.active-filters')
+    activeFiltersText = Array.from(activeFiltersText)
+
+    let allRecipes = document.getElementsByClassName('card-body')
+    allRecipes = Array.from(allRecipes)
+
+    // Push the new tag to the array of all tags
+    filtersArray.push(tag)
+
+    allRecipes.forEach(recipe => {
+        let containsAllTags = 0;
+        recipe.parentNode.parentNode.hidden = true
+        for (let i = 0; i < filtersArray.length; i++) {
+            if (recipe.children[0].children[0].textContent.toLowerCase().includes(filtersArray[i].toLowerCase())
+                || recipe.children[1].children[0].textContent.toLowerCase().includes(filtersArray[i].toLowerCase())
+                || recipe.children[1].children[1].textContent.toLowerCase().includes(filtersArray[i].toLowerCase())) {
+                containsAllTags++
+            }
+            // If one of each tag is found in a recipe he is displayed
+            if (containsAllTags === filtersArray.length) {
+                recipe.parentNode.parentNode.hidden = false
+            }
+        }
+    })
+}
+
+function resetTag(tag) {
+    let allRecipes = document.getElementsByClassName('card-body')
+    allRecipes = Array.from(allRecipes)
+
+    // Remove the tag deleted from the array of all the tags
+    filtersArray = filtersArray.filter(function (e) { return e !== tag })
+
+    if (filtersArray.length > 0) {
+        allRecipes.forEach(recipe => {
+            let containsAllTags = 0;
+            recipe.parentNode.parentNode.hidden = true
+            for (let i = 0; i < filtersArray.length; i++) {
+                // Looking into the different parts of a recipe card
+                if (recipe.children[0].children[0].textContent.toLowerCase().includes(filtersArray[i].toLowerCase())
+                    || recipe.children[1].children[0].textContent.toLowerCase().includes(filtersArray[i].toLowerCase())
+                    || recipe.children[1].children[1].textContent.toLowerCase().includes(filtersArray[i].toLowerCase())) {
+                    containsAllTags++
+                }
+                if (containsAllTags === filtersArray.length) {
+                    recipe.parentNode.parentNode.hidden = false
+                }
+            }
+        })
+    } else {
+        // If no tag = all the recipes are displayed
+        allRecipes.forEach(recipe => {
+            recipe.parentNode.parentNode.hidden = false
+        })
+    }
 }
 
 export { addListenerToFilterButton, createDropdownOptions, deleteAllDropdownOptions, displayHideDropdownOptions }

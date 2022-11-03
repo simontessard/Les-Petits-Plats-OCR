@@ -209,20 +209,20 @@ button:focus {outline:0;}
     background-color: #3282F7;
     color: white;
 }
-#ingredientsDropdownMenu a:hover{
+#ingredientsDropdownMenu a:hover, #ingredientsDropdownMenu .selected{
     background-color: #0c68f1;
 }
 #appareilsDropdownMenu {
     background-color: #68D9A4;
     color: white;
 }
-#appareilsDropdownMenu a:hover{
+#appareilsDropdownMenu a:hover, #appareilsDropdownMenu .selected{
     background-color: #5ec494;
 }
 #ustensilesDropdownMenu {
     background-color: #ED6454;
     color: white;
 }
-#ustensilesDropdownMenu a:hover{
+#ustensilesDropdownMenu a:hover, #ustensilesDropdownMenu .selected{
     background-color: #cf574a;
 }
