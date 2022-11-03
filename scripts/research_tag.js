@@ -8,6 +8,10 @@ function addListenerToFilterButton() {
 
     allFilterButtons.forEach(button => {
         button.addEventListener('click', function openCloseDropdown() {
+            // Reset visibility in case of close when searching
+            let dropdownitems = this.lastChild.children[0].children
+            dropdownitems = Array.from(dropdownitems)
+            dropdownitems.forEach(tag => { tag.hidden = false })
             // Case button to other button click
             allFilterButtons.forEach(oneButton => {
                 if (oneButton.name != button.name) {
@@ -23,6 +27,7 @@ function addListenerToFilterButton() {
             if (button.classList.contains('active')) {
                 button.classList.remove('active')
                 searchInputTag.classList.remove('active')
+                searchInputTag.value = ''
                 displayHideDropdownOptions(button, 'none')
             } else {
                 button.classList.add('active')
@@ -46,14 +51,16 @@ function createDropdownOptions(items) {
         button.appendChild(dropdownOptions)
 
         searchInputTag.addEventListener('input', function () {
-            deleteActiveDropdownOptions(button.id, 'dropdown-item')
+            let dropdownitems = this.nextSibling.children[0].children
+            dropdownitems = Array.from(dropdownitems)
 
-            let newItems = whichButton(this.parentElement.name, items)[0]
-            let elementBackgroundColor = whichButton(this.parentElement.name, items)[1]
-            // Research if characters entered by the user are in one of the tag in real time
-            let resultResearch = newItems.filter(tag => tag.includes(this.value) || tag.toUpperCase().includes(this.value) || tag.toLowerCase().includes(this.value))
-            // Update the tag list displayed in the dropdown with result from the search
-            createDropdownList(resultResearch, elementBackgroundColor, this.nextSibling.firstChild)
+            dropdownitems.forEach(tag => {
+                if (tag.innerText.toLowerCase().includes(this.value.toLowerCase())) {
+                    tag.hidden = false
+                } else {
+                    tag.hidden = true
+                }
+            })
         })
 
         // Disable the closing of dropdown on click
@@ -155,14 +162,6 @@ function splitArray(array, splitSize) {
         result.push(newArray);
     }
     return result;
-}
-
-function deleteActiveDropdownOptions(buttonId, dropdownClass) {
-    let dropdownOptionsActive = document.querySelectorAll('#' + buttonId + ' .' + dropdownClass)
-    dropdownOptionsActive = Array.from(dropdownOptionsActive);
-    if (dropdownOptionsActive != null) {
-        for (let item of dropdownOptionsActive) { item.remove(); }
-    }
 }
 
 function deleteAllDropdownOptions() {
