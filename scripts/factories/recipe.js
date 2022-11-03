@@ -48,8 +48,12 @@ function recipeFactory (data) {
           if (unity === undefined) {
             unity = "";
           }
+          let quantity = ingredient.quantity;
+          if (quantity === undefined) {
+            quantity = "au choix";
+          }
           ingredientNameBold.textContent = ingredient.ingredient
-          ingredientNameEnd.textContent = ": " + ingredient.quantity + unity;
+          ingredientNameEnd.textContent = ": " + quantity + ' '+ unity;
           recipeIngredient.appendChild(ligne)
           ligne.append(ingredientNameBold, ingredientNameEnd)
       });
