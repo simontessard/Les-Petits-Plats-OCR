@@ -55,7 +55,10 @@ function mainResearch() {
 }
 
 function createMsgNoResult() {
+    let noResult = []
     removeMsgNoResult()
+    deleteAllDropdownOptions()
+    createDropdownOptions(noResult)
     const msgNoResult = document.createElement('p')
     msgNoResult.textContent = 'Aucun résultat trouvé'
     msgNoResult.setAttribute('class', 'msgNoResult')
