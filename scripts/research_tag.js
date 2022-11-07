@@ -196,7 +196,6 @@ function addTag(tag) {
     filtersArray.push(tag)
     let result = getRecipesFromOneTag(recipesFromSearchBar, tag)
     setRecipesFromSearchBar(result)
-    updateUI(recipesFromSearchBar)
 }
 
 function removeTag(tag) {
@@ -204,27 +203,22 @@ function removeTag(tag) {
 
     if (filtersArray.length > 0) {
         setRecipesFromSearchBar(getRecipesFromMultiplesTags(filtersArray))
-        updateUI(recipesFromSearchBar)
     }
     else {
         let mainSearchTag = getMainSearchTag()
         if (mainSearchTag != null) {
             setRecipesFromSearchBar(getRecipesFromOneTag(recipes, mainSearchTag))
-            updateUI(recipesFromSearchBar)
         } else {
             setRecipesFromSearchBar(recipes)
-            updateUI(recipesFromSearchBar)
         }
     }
 }
 
 function getRecipesFromMultiplesTags(tagsArray) {
     let recipesFromTags = recipes
-
     tagsArray.forEach(tag => {
         recipesFromTags = getRecipesFromOneTag(recipesFromTags, tag)
     })
-    
     return recipesFromTags
 }
 

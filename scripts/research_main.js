@@ -83,6 +83,7 @@ function updateUI(result) {
 
 function setRecipesFromSearchBar(res) {
     recipesFromSearchBar = res
+    updateUI(recipesFromSearchBar)
 }
 
 function removeItemFromFilterArray(tag) {
