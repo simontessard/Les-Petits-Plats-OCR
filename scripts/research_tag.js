@@ -46,10 +46,9 @@ function createDropdownOptions(items) {
     allFilterButtons.forEach(button => {
         const dropdownOptions = document.createElement('div')
         dropdownOptions.setAttribute('class', 'dropdown-option dropdown-multicol')
+        button.appendChild(dropdownOptions)
 
         let searchInputTag = document.getElementById('searchInput' + button.name)
-
-        button.appendChild(dropdownOptions)
 
         searchInputTag.addEventListener('input', function () {
             let dropdownitems = this.nextSibling.children[0].children
@@ -58,16 +57,12 @@ function createDropdownOptions(items) {
             dropdownitems.forEach(tag => {
                 if (tag.innerText.toLowerCase().includes(this.value.toLowerCase())) {
                     tag.hidden = false
-                } else {
-                    tag.hidden = true
-                }
+                } else { tag.hidden = true }
             })
         })
 
         // Disable the closing of dropdown on click
-        searchInputTag.addEventListener('click', function (e) {
-            e.stopPropagation()
-        })
+        searchInputTag.addEventListener('click', function (e) { e.stopPropagation() })
 
         let rowDropdown = document.createElement('div')
         rowDropdown.setAttribute('class', 'dropdown-row')
@@ -146,9 +141,7 @@ function createDropdownList(items, elementBackgroundColor, rowDropdown) {
                     addTag(activeFilterText.textContent)
                 }
             })
-            if (rowDropdown != null) {
-                rowDropdown.appendChild(itemDropdown)
-            }
+            if (rowDropdown != null) { rowDropdown.appendChild(itemDropdown) }
         })
     }
 }
@@ -171,8 +164,7 @@ function deleteAllDropdownOptions() {
 }
 
 function whichButton(name, items) {
-    let newItems
-    let elementBackgroundColor
+    let newItems, elementBackgroundColor
 
     switch (name) {
         case 'ingredients':
