@@ -1,6 +1,9 @@
 import { recipes } from "./data/recipes.js";
 import { displayData } from "./index.js";
-import { createDropdownOptions, deleteAllDropdownOptions, displayHideDropdownOptions } from "./research_tag.js"
+import { createDropdownOptions, deleteAllDropdownOptions, displayHideDropdownOptions, getRecipesFromMultiplesTags } from "./research_tag.js"
+
+let recipesFromSearchBar = recipes
+let filtersArray = []
 
 function mainResearch() {
     const searchBar = document.querySelector('.form-control')
@@ -8,54 +11,39 @@ function mainResearch() {
     const groupButtons = document.querySelector('.btn-group')
 
     searchBar.addEventListener('input', function () {
-        let recipesFromSearchBar = []
+        console.log(recipesFromSearchBar)
         if (this.value.length > 2) {
-            for (let i = 0; i < recipes.length; i++) {
-
-                let actualRecipe = recipes[i]
-                // Search for name 
-                if (actualRecipe.name.toLowerCase().includes(this.value) || actualRecipe.name.toUpperCase().includes(this.value) || actualRecipe.name.includes(this.value)) {
-                    recipesFromSearchBar.push(actualRecipe)
-                }
-                // Search for description
-                else if (actualRecipe.description.toLowerCase().includes(this.value) || actualRecipe.description.toUpperCase().includes(this.value) || actualRecipe.description.includes(this.value)) {
-                    recipesFromSearchBar.push(actualRecipe)
-                } 
-                else {
-                    // Search for ingredient
-                    for (let a = 0; a < actualRecipe.ingredients.length ; a++) {
-                        let actualIngredient = actualRecipe.ingredients[a]
-
-                        if (actualIngredient.ingredient.toLowerCase().includes(this.value) || actualIngredient.ingredient.toUpperCase().includes(this.value) || actualIngredient.ingredient.includes(this.value)) {
-                            recipesFromSearchBar.push(actualRecipe)
-                        }
-                    }
-                }
+            recipesFromSearchBar = []
+            if (filtersArray.length > 0) {
+                recipesFromSearchBar = getRecipesFromOneTag(getRecipesFromMultiplesTags(filtersArray), this.value)
             }
-            cardsContainer.innerHTML = ''
-            if (recipesFromSearchBar.length > 0 ) {
-                displayData(recipesFromSearchBar)
-                deleteAllDropdownOptions()
-                createDropdownOptions(recipesFromSearchBar)
-                removeMsgNoResult()
+            else { // Main research only (without any tag)
+                recipesFromSearchBar = getRecipesFromOneTag(recipes, this.value)
+            }
+            if (recipesFromSearchBar.length > 0) {
+                updateUI(recipesFromSearchBar)
             }
             else {
+                cardsContainer.innerHTML = ''
                 groupButtons.after(createMsgNoResult())
             }
         }
-        else {
-            cardsContainer.innerHTML = ''
-            displayData(recipes)
-            deleteAllDropdownOptions()
-            createDropdownOptions(recipes)
-            removeMsgNoResult()
+        else if (this.value.length == 0) {
+            if (filtersArray.length > 0) {
+                recipesFromSearchBar = getRecipesFromMultiplesTags(filtersArray)
+                updateUI(recipesFromSearchBar)
+            }
+            else { 
+                updateUI(recipes)
+                recipesFromSearchBar = recipes
+            }
         }
     })
-    searchBar.addEventListener('click', function(){
+    searchBar.addEventListener('click', function () {
         const allFilterButtons = document.querySelectorAll('.filter-button')
 
         allFilterButtons.forEach(button => {
-        let searchInputTag = document.getElementById('searchInput' + button.name)
+            let searchInputTag = document.getElementById('searchInput' + button.name)
 
             if (button.classList.contains('active')) {
                 button.classList.remove('active')
@@ -81,4 +69,59 @@ function removeMsgNoResult() {
     }
 }
 
-export { mainResearch }
+function updateUI(result) {
+    const cardsContainer = document.querySelector('.card-deck')
+    cardsContainer.innerHTML = ''
+    displayData(result)
+    deleteAllDropdownOptions()
+    createDropdownOptions(result)
+    removeMsgNoResult()
+}
+
+function setRecipesFromSearchBar(res) {
+    recipesFromSearchBar = res
+}
+
+function removeItemFromFilterArray(tag) {
+    // Remove the tag deleted from the array of all the tags
+    filtersArray = filtersArray.filter(function (e) { return e !== tag })
+}
+
+function getMainSearchTag() {
+    let mainSearchTag = document.getElementById("mainSearchTag").value
+    return mainSearchTag
+}
+
+function getRecipesFromOneTag(recipes, tag) {
+    let recipesFromOneTag = []
+    tag = tag.toLowerCase()
+
+    for (let i = 0; i < recipes.length; i++) {
+        let actualRecipe = recipes[i]
+        // Search for name 
+        if (actualRecipe.name.toLowerCase().includes(tag) 
+        || actualRecipe.description.toLowerCase().includes(tag) 
+        || actualRecipe.appliance.toLowerCase().includes(tag)) {
+            recipesFromOneTag.push(actualRecipe)
+        }
+        else {
+            // Search for ingredient
+            for (let a = 0; a < actualRecipe.ingredients.length; a++) {
+                let actualIngredient = actualRecipe.ingredients[a]
+                if (actualIngredient.ingredient.toLowerCase().includes(tag)) {
+                    recipesFromOneTag.push(actualRecipe)
+                }
+            }
+            // Search for ustensils
+            for (let a = 0; a < actualRecipe.ustensils.length; a++) {
+                let actualUstensil = actualRecipe.ustensils[a]
+                if (actualUstensil.toLowerCase().includes(tag)) {
+                    recipesFromOneTag.push(actualRecipe)
+                }
+            }
+        }
+    }
+    return recipesFromOneTag
+}
+
+export { mainResearch, setRecipesFromSearchBar, recipesFromSearchBar, updateUI, filtersArray, removeItemFromFilterArray, getRecipesFromOneTag, getMainSearchTag }
