@@ -100,31 +100,30 @@ function getRecipesFromOneTag(recipes, tag) {
     let recipesFromOneTag = []
     tag = tag.toLowerCase()
 
-    for (let i = 0; i < recipes.length; i++) {
-        let actualRecipe = recipes[i]
+    recipes.forEach(recipe => {
         // Search for name 
-        if (actualRecipe.name.toLowerCase().includes(tag) 
-        || actualRecipe.description.toLowerCase().includes(tag) 
-        || actualRecipe.appliance.toLowerCase().includes(tag)) {
-            recipesFromOneTag.push(actualRecipe)
+        if (recipe.name.toLowerCase().includes(tag) 
+        || recipe.description.toLowerCase().includes(tag) 
+        || recipe.appliance.toLowerCase().includes(tag)) {
+            recipesFromOneTag.push(recipe)
         }
         else {
             // Search for ingredient
-            for (let a = 0; a < actualRecipe.ingredients.length; a++) {
-                let actualIngredient = actualRecipe.ingredients[a]
+            for (let a = 0; a < recipe.ingredients.length; a++) {
+                let actualIngredient = recipe.ingredients[a]
                 if (actualIngredient.ingredient.toLowerCase().includes(tag)) {
-                    recipesFromOneTag.push(actualRecipe)
+                    recipesFromOneTag.push(recipe)
                 }
             }
             // Search for ustensils
-            for (let a = 0; a < actualRecipe.ustensils.length; a++) {
-                let actualUstensil = actualRecipe.ustensils[a]
+            for (let a = 0; a < recipe.ustensils.length; a++) {
+                let actualUstensil = recipe.ustensils[a]
                 if (actualUstensil.toLowerCase().includes(tag)) {
-                    recipesFromOneTag.push(actualRecipe)
+                    recipesFromOneTag.push(recipe)
                 }
             }
         }
-    }
+    })
     return recipesFromOneTag
 }
 
