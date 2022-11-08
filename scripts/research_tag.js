@@ -40,6 +40,18 @@ function addListenerToFilterButton() {
     })
 }
 
+function makeAllFiltersButtonsInactive() {
+    const allFilterButtons = document.querySelectorAll('.filter-button')
+
+    allFilterButtons.forEach(oneButton => {
+        let searchInputTag = document.getElementById('searchInput' + oneButton.name)
+        searchInputTag.classList.remove('active')
+        searchInputTag.value = ''
+        oneButton.classList.remove('active')
+        displayHideDropdownOptions(oneButton, 'none')
+    })
+}
+
 function createDropdownOptions(items) {
     const allFilterButtons = document.querySelectorAll('.filter-button')
 
@@ -96,48 +108,32 @@ function createDropdownList(items, elementBackgroundColor, rowDropdown) {
             itemDropdown.setAttribute('class', 'dropdown-item')
             itemDropdown.innerText = ingredient.charAt(0).toUpperCase() + ingredient.slice(1);
             itemDropdown.addEventListener('click', function (e) {
-                if (itemDropdown.classList.contains('selected')) {
-                    itemDropdown.classList.remove('selected');
 
-                    let allActiveFilters = document.getElementsByClassName('filter-tag')
-                    allActiveFilters = Array.from(allActiveFilters)
+                let activeFilterElement = document.createElement('div')
+                activeFilterElement.setAttribute('class', 'filter-element')
+                activeFilterElement.setAttribute('id', 'tag' + itemDropdown.textContent)
 
-                    if (allActiveFilters !== null) {
-                        allActiveFilters.forEach(oneFilter => {
-                            if (oneFilter.textContent === itemDropdown.innerText) {
-                                oneFilter.parentElement.remove()
-                                filtersArray = filtersArray.filter(function (e) { return e !== oneFilter.textContent })
-                            }
-                        })
-                    }
-                } else {
-                    itemDropdown.classList.add('selected');
-                }
+                let activeFilterText = document.createElement('p')
+                activeFilterText.innerText = itemDropdown.textContent
+                activeFilterText.setAttribute('class', 'filter-tag')
+                activeFilterElement.appendChild(activeFilterText)
 
-                if (itemDropdown.classList.contains('selected')) {
-                    let activeFilterElement = document.createElement('div');
-                    activeFilterElement.setAttribute('class', 'filter-element');
+                let activeFilterImg = document.createElement('img');
+                activeFilterImg.setAttribute('src', 'assets/icons/times-circle-regular.svg')
+                activeFilterImg.setAttribute('class', 'filter-cross')
 
-                    let activeFilterText = document.createElement('p');
-                    activeFilterText.innerText = itemDropdown.textContent;
-                    activeFilterText.setAttribute('class', 'filter-tag')
-                    activeFilterElement.appendChild(activeFilterText)
+                // Click cross to delete an active tag
+                activeFilterImg.addEventListener('click', function () {
+                    activeFilterElement.remove()
+                    removeTag(activeFilterText.textContent)
+                    makeAllFiltersButtonsInactive()
+                })
+                activeFilterElement.style.backgroundColor = elementBackgroundColor
 
-                    let activeFilterImg = document.createElement('img');
-                    activeFilterImg.setAttribute('src', 'assets/icons/times-circle-regular.svg')
-                    activeFilterImg.setAttribute('class', 'filter-cross')
+                activeFilterElement.appendChild(activeFilterImg)
 
-                    // Click cross to delete an active tag
-                    activeFilterImg.addEventListener('click', function () {
-                        activeFilterElement.remove()
-                        itemDropdown.classList.remove('selected');
-                        removeTag(activeFilterText.textContent)
-                    })
-                    activeFilterElement.style.backgroundColor = elementBackgroundColor
-
-                    activeFilterElement.appendChild(activeFilterImg)
+                if (document.getElementById(activeFilterElement.id) == null) {
                     filtersSection.appendChild(activeFilterElement)
-
                     addTag(activeFilterText.textContent)
                 }
             })
