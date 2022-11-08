@@ -2,7 +2,7 @@ import { recipes } from "./data/recipes.js";
 import { displayData } from "./index.js";
 import { createDropdownOptions, deleteAllDropdownOptions, displayHideDropdownOptions, getRecipesFromMultiplesTags } from "./research_tag.js"
 
-let recipesFromSearchBar = recipes
+let recipesFromSearch = recipes
 let filtersArray = []
 
 function mainResearch() {
@@ -11,17 +11,17 @@ function mainResearch() {
     const groupButtons = document.querySelector('.btn-group')
 
     searchBar.addEventListener('input', function () {
-        console.log(recipesFromSearchBar)
+        console.log(recipesFromSearch)
         if (this.value.length > 2) {
-            recipesFromSearchBar = []
+            recipesFromSearch = []
             if (filtersArray.length > 0) {
-                recipesFromSearchBar = getRecipesFromOneTag(getRecipesFromMultiplesTags(filtersArray), this.value)
+                recipesFromSearch = getRecipesFromOneTag(getRecipesFromMultiplesTags(filtersArray), this.value)
             }
             else { // Main research only (without any tag)
-                recipesFromSearchBar = getRecipesFromOneTag(recipes, this.value)
+                recipesFromSearch = getRecipesFromOneTag(recipes, this.value)
             }
-            if (recipesFromSearchBar.length > 0) {
-                updateUI(recipesFromSearchBar)
+            if (recipesFromSearch.length > 0) {
+                updateUI(recipesFromSearch)
             }
             else {
                 cardsContainer.innerHTML = ''
@@ -30,12 +30,12 @@ function mainResearch() {
         }
         else if (this.value.length == 0) {
             if (filtersArray.length > 0) {
-                recipesFromSearchBar = getRecipesFromMultiplesTags(filtersArray)
-                updateUI(recipesFromSearchBar)
+                recipesFromSearch = getRecipesFromMultiplesTags(filtersArray)
+                updateUI(recipesFromSearch)
             }
             else { 
                 updateUI(recipes)
-                recipesFromSearchBar = recipes
+                recipesFromSearch = recipes
             }
         }
     })
@@ -82,8 +82,8 @@ function updateUI(result) {
 }
 
 function setRecipesFromSearchBar(res) {
-    recipesFromSearchBar = res
-    updateUI(recipesFromSearchBar)
+    recipesFromSearch = res
+    updateUI(recipesFromSearch)
 }
 
 function removeItemFromFilterArray(tag) {
@@ -128,4 +128,4 @@ function getRecipesFromOneTag(recipes, tag) {
     return recipesFromOneTag
 }
 
-export { mainResearch, setRecipesFromSearchBar, recipesFromSearchBar, updateUI, filtersArray, removeItemFromFilterArray, getRecipesFromOneTag, getMainSearchTag }
+export { mainResearch, setRecipesFromSearchBar, recipesFromSearch, updateUI, filtersArray, removeItemFromFilterArray, getRecipesFromOneTag, getMainSearchTag }

@@ -1,5 +1,5 @@
 import { getAppareils, getIngredients, getUstensils } from "./index.js";
-import { setRecipesFromSearchBar, recipesFromSearchBar, updateUI, filtersArray, removeItemFromFilterArray, getRecipesFromOneTag, getMainSearchTag } from "./research_main.js";
+import { setRecipesFromSearchBar, recipesFromSearch, updateUI, filtersArray, removeItemFromFilterArray, getRecipesFromOneTag, getMainSearchTag } from "./research_main.js";
 import { recipes } from "./data/recipes.js";
 
 const filtersSection = document.querySelector('.active-filters')
@@ -186,7 +186,7 @@ function whichButton(name, items) {
 function addTag(tag) {
     // Push the new tag to the array of all tags
     filtersArray.push(tag)
-    let result = getRecipesFromOneTag(recipesFromSearchBar, tag)
+    let result = getRecipesFromOneTag(recipesFromSearch, tag)
     setRecipesFromSearchBar(result)
 }
 
