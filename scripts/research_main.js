@@ -33,7 +33,7 @@ function mainResearch() {
                 recipesFromSearch = getRecipesFromMultiplesTags(filtersArray)
                 updateUI(recipesFromSearch)
             }
-            else { 
+            else {
                 updateUI(recipes)
                 recipesFromSearch = recipes
             }
@@ -102,9 +102,9 @@ function getRecipesFromOneTag(recipes, tag) {
 
     recipes.forEach(recipe => {
         // Search for name 
-        if (recipe.name.toLowerCase().includes(tag) 
-        || recipe.description.toLowerCase().includes(tag) 
-        || recipe.appliance.toLowerCase().includes(tag)) {
+        if (recipe.name.toLowerCase().includes(tag)
+            || recipe.description.toLowerCase().includes(tag)
+            || recipe.appliance.toLowerCase().includes(tag)) {
             recipesFromOneTag.push(recipe)
         }
         else {
@@ -115,13 +115,13 @@ function getRecipesFromOneTag(recipes, tag) {
                 }
             })
             // Search for ustensils
-            recipe.ustensils.forEach(ustensil => {
-                if (ustensil === undefined) {
-                    if (ustensil.ingredient.toLowerCase().includes(tag)) {
+            if (recipe.ustensils !== undefined) {
+                recipe.ustensils.forEach(ustensil => {
+                    if (ustensil.toLowerCase().includes(tag)) {
                         recipesFromOneTag.push(recipe)
                     }
-                }
-            })
+                })
+            }
         }
     })
     return recipesFromOneTag
