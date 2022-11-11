@@ -109,19 +109,19 @@ function getRecipesFromOneTag(recipes, tag) {
         }
         else {
             // Search for ingredient
-            for (let a = 0; a < recipe.ingredients.length; a++) {
-                let actualIngredient = recipe.ingredients[a]
-                if (actualIngredient.ingredient.toLowerCase().includes(tag)) {
+            recipe.ingredients.forEach(ingredient => {
+                if (ingredient.ingredient.toLowerCase().includes(tag)) {
                     recipesFromOneTag.push(recipe)
                 }
-            }
+            })
             // Search for ustensils
-            for (let a = 0; a < recipe.ustensils.length; a++) {
-                let actualUstensil = recipe.ustensils[a]
-                if (actualUstensil.toLowerCase().includes(tag)) {
-                    recipesFromOneTag.push(recipe)
+            recipe.ustensils.forEach(ustensil => {
+                if (ustensil === undefined) {
+                    if (ustensil.ingredient.toLowerCase().includes(tag)) {
+                        recipesFromOneTag.push(recipe)
+                    }
                 }
-            }
+            })
         }
     })
     return recipesFromOneTag
